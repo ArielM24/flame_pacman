@@ -1,31 +1,29 @@
-import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame_pacman/game/components/hitbox/hitboxed_component.dart';
+import 'package:flame_pacman/shared/constants.dart';
 import 'package:flame_pacman/shared/enums.dart';
-import 'package:flutter/material.dart';
 
 import 'wall_component.dart';
 
-class WallEdgeLine extends PositionComponent {
+class WallEdgeLine extends HitboxedComponent {
   List<WallComponent> walls = [];
   WallEdgeLine({super.position, super.angle});
   @override
   onLoad() {
-    walls.add(WallComponent(type: WallType.long1, position: Vector2(20, 20)));
+    walls.add(WallComponent(
+        type: WallType.long1,
+        position:
+            Vector2(Constants.spritesOffsetN(0), Constants.spritesOffsetN(0))));
     walls.add(WallComponent(
         type: WallType.edge1,
         direction: Direction.up,
-        position: Vector2(20, 60)));
+        position:
+            Vector2(Constants.spritesOffsetN(0), Constants.spritesOffsetN(1))));
     for (var element in walls) {
       add(element);
     }
-    final defaultPaint = Paint()
-      ..color = Colors.red
-      ..style = PaintingStyle.stroke;
 
-    final hitbox = RectangleHitbox()
-      ..paint = defaultPaint
-      ..renderShape = true;
-    add(hitbox);
-    size = Vector2(40, 80);
+    size = Vector2(Constants.spritesSize, Constants.spritesSize * 2);
+    super.onLoad();
   }
 }

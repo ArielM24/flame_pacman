@@ -1,37 +1,27 @@
 import 'dart:math';
 
-import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame_pacman/game/components/pacman_component.dart';
-import 'package:flame_pacman/game/components/walls/wall_cross.dart';
-import 'package:flame_pacman/game/components/walls/wall_edge_line.dart';
+import 'package:flame_pacman/shared/constants.dart';
 import 'package:flame_pacman/shared/enums.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
-import 'components/walls/wall_component.dart';
+import 'components/walls/game_walls.dart';
 
 class PacmanGame extends FlameGame with KeyboardEvents, HasCollisionDetection {
   late final PacmanComponent pacmanSprite;
-  late final WallComponent wall1, wall2, wall3, wall4, wall5, wall6, wall7;
 
   @override
   Future<void> onLoad() async {
-    pacmanSprite = PacmanComponent(position: Vector2(300, 400));
+    pacmanSprite = PacmanComponent(
+        position:
+            Vector2(Constants.spritesOffsetN(3), Constants.spritesSize * 3));
     await add(pacmanSprite);
 
-    final wallEdgeLine = WallEdgeLine(position: Vector2(720, 60));
-    add(wallEdgeLine);
-
-    final wallCross = WallCross(position: Vector2(740, 240));
-    add(wallCross);
-    final wallCross2 = WallCross(position: Vector2(620, 280));
-    wallCross2.angle = -pi / 2;
-    add(wallCross2);
-    final wallCross3 = WallCross(position: Vector2(860, 280));
-    wallCross3.angle = pi / 2;
-    add(wallCross3);
+    final gameWalls = GameWalls();
+    add(gameWalls);
   }
 
   @override
