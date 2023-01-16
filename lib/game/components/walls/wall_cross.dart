@@ -1,11 +1,11 @@
 import 'package:flame/components.dart';
 import 'package:flame_pacman/game/components/hitbox/hitboxed_component.dart';
 import 'package:flame_pacman/game/components/walls/wall_component.dart';
+import 'package:flame_pacman/game/components/walls/wall_list_component.dart';
 import 'package:flame_pacman/shared/constants.dart';
 import 'package:flame_pacman/shared/enums.dart';
 
-class WallCross extends HitboxedComponent {
-  final List<WallComponent> walls = [];
+class WallCross extends WallListComponent {
   WallCross({super.position, super.angle});
   @override
   onLoad() {
@@ -56,6 +56,7 @@ class WallCross extends HitboxedComponent {
       add(element);
     }
     size = Vector2(Constants.spritesSize * 5, Constants.spritesSize * 3);
+    //debugMode = true;
     super.onLoad();
   }
 }

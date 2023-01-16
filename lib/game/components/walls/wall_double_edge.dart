@@ -1,13 +1,14 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_pacman/game/components/hitbox/hitboxed_component.dart';
+import 'package:flame_pacman/game/components/walls/wall_list_component.dart';
 import 'package:flame_pacman/shared/constants.dart';
 import 'package:flame_pacman/shared/enums.dart';
 
 import 'wall_component.dart';
 
-class WallDoubleEdge extends HitboxedComponent {
+class WallDoubleEdge extends WallListComponent {
   final int longLines;
-  final List<WallComponent> walls = [];
 
   WallDoubleEdge({super.position, super.angle, this.longLines = 0});
   @override
@@ -33,6 +34,7 @@ class WallDoubleEdge extends HitboxedComponent {
       add(element);
     }
     size = Vector2(Constants.spritesSize * walls.length, Constants.spritesSize);
+    //debugMode = true;
     super.onLoad();
   }
 }

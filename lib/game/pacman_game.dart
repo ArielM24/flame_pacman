@@ -16,8 +16,10 @@ class PacmanGame extends FlameGame with KeyboardEvents, HasCollisionDetection {
   @override
   Future<void> onLoad() async {
     pacmanSprite = PacmanComponent(
-        position:
-            Vector2(Constants.spritesOffsetN(3), Constants.spritesSize * 3));
+      position:
+          //Vector2(Constants.spritesOffsetN(3), Constants.spritesSize * 3),
+          Vector2(260, 160),
+    );
     await add(pacmanSprite);
 
     final gameWalls = GameWalls();

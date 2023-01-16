@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_pacman/shared/constants.dart';
 import 'package:flame_pacman/shared/enums.dart';
@@ -29,5 +30,6 @@ class WallComponent extends SpriteComponent {
     } else if (direction == Direction.right) {
       angle = pi / 2;
     }
+    add(RectangleHitbox(isSolid: true));
   }
 }

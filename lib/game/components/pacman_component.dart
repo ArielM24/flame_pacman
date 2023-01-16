@@ -4,6 +4,8 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_pacman/game/components/hitbox/hitboxed_sprite.dart';
 import 'package:flame_pacman/game/components/walls/wall_component.dart';
+import 'package:flame_pacman/game/components/walls/wall_double_edge.dart';
+import 'package:flame_pacman/game/components/walls/wall_list_component.dart';
 import 'package:flame_pacman/game/pacman_game.dart';
 import 'package:flame_pacman/shared/constants.dart';
 import 'package:flame_pacman/shared/enums.dart';
@@ -11,7 +13,7 @@ import 'package:flame_pacman/shared/movement_constraints.dart';
 import 'package:flame_pacman/shared/sprites.dart';
 import 'package:flutter/material.dart';
 
-class PacmanComponent extends HitboxedSprite
+class PacmanComponent extends SpriteComponent
     with CollisionCallbacks, HasGameRef<PacmanGame> {
   Direction lookingAt;
 
@@ -24,6 +26,7 @@ class PacmanComponent extends HitboxedSprite
       right: 2500,
       top: Constants.spritesSize,
       left: Constants.spritesSize);
+
   PacmanComponent(
       {this.lookingAt = Direction.right,
       super.position,
@@ -36,6 +39,7 @@ class PacmanComponent extends HitboxedSprite
           size: Vector2.all(Constants.spritesSize),
           anchor: Anchor.center,
         );
+
   @override
   Future<void> onLoad() async {
     sprites = [
@@ -44,54 +48,66 @@ class PacmanComponent extends HitboxedSprite
       await Sprite.load(Sprites.pacman3),
     ];
     sprite = sprites[_currentSprite];
-    size = Vector2.all(Constants.spritesSize);
+    size = Vector2.all(Constants.spritesSize * (2 / 3));
     movementConstraints = movementConstraints.copyWith(
         right: gameRef.size.x - spriteOffset,
         left: spriteOffset,
         top: spriteOffset,
         bottom: gameRef.size.y - spriteOffset);
+    debugMode = true;
+    add(RectangleHitbox(isSolid: true));
     super.onLoad();
   }
 
-  double get spriteOffset => Constants.spritesSize;
+  double get spriteOffset => size.x / 5;
 
   move(Direction direction) {
     lootAtDirection(direction);
     updateSprite();
-    if (collisionWithWall) {
-      return;
-    }
+    // if (collisionWithWall) {
+    //   return;
+    // }
     if (direction == Direction.right) {
       if ((x + spriteOffset) <= movementConstraints.right) {
-        final components = game.componentsAtPoint(Vector2(x + spriteOffset, y));
-        if (components.any((e) => e is WallComponent)) {
-          return;
-        }
         x += spriteOffset;
+        debugPrint("x $x");
+
+        if (collisionWithWall) {
+          x -= spriteOffset * 2;
+          debugPrint("return x $x");
+        }
+        // final components = game.componentsAtPoint(Vector2(x + spriteOffset, y));
+        // if (components.any((e) => e is WallComponent)) {
+
+        //   return;
+        // }
       }
     } else if (direction == Direction.left) {
       if ((x - spriteOffset) >= movementConstraints.left) {
-        final components = game.componentsAtPoint(Vector2(x - spriteOffset, y));
-        if (components.any((e) => e is WallComponent)) {
-          return;
+        if (collisionWithWall) {
+          x += spriteOffset * 2;
+          debugPrint("return");
+        } else {
+          x -= spriteOffset;
         }
-        x -= spriteOffset;
       }
     } else if (direction == Direction.up) {
       if ((y - spriteOffset) >= movementConstraints.top) {
-        final components = game.componentsAtPoint(Vector2(x, y - spriteOffset));
-        if (components.any((e) => e is WallComponent)) {
-          return;
+        if (collisionWithWall) {
+          y += spriteOffset * 2;
+          debugPrint("return");
+        } else {
+          y -= spriteOffset;
         }
-        y -= spriteOffset;
       }
     } else if (direction == Direction.down) {
       if ((y + spriteOffset) <= movementConstraints.bottom) {
-        final components = game.componentsAtPoint(Vector2(x, y + spriteOffset));
-        if (components.any((e) => e is WallComponent)) {
-          return;
+        if (collisionWithWall) {
+          y -= spriteOffset * 2;
+          debugPrint("return");
+        } else {
+          y += spriteOffset;
         }
-        y += spriteOffset;
       }
     }
   }
@@ -117,10 +133,19 @@ class PacmanComponent extends HitboxedSprite
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
-    debugPrint("$intersectionPoints $other");
-
     if (other is WallComponent) {
       collisionWithWall = true;
+      if (lookingAt == Direction.right) {
+        x -= spriteOffset * 2;
+      } else if (lookingAt == Direction.left) {
+        x += spriteOffset * 2;
+      }
+      if (lookingAt == Direction.down) {
+        y -= spriteOffset * 2;
+      }
+      if (lookingAt == Direction.up) {
+        y += spriteOffset * 2;
+      }
     }
     super.onCollision(intersectionPoints, other);
   }
@@ -129,6 +154,7 @@ class PacmanComponent extends HitboxedSprite
   void onCollisionEnd(PositionComponent other) {
     if (other is WallComponent) {
       collisionWithWall = false;
+      debugPrint("collision ends");
     }
     super.onCollisionEnd(other);
   }
