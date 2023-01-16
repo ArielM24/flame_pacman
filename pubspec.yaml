@@ -65,6 +65,9 @@ flutter:
     - assets/images/pacman1.png
     - assets/images/pacman2.png
     - assets/images/pacman3.png
+    - assets/images/wallLong1.png
+    - assets/images/wallEdge1.png
+    - assets/images/wallCross1.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
