@@ -3,15 +3,21 @@ import 'dart:math';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_pacman/shared/constants.dart';
+import 'package:flame_pacman/shared/position_helper.dart';
 import 'package:flame_pacman/shared/enums.dart';
 import 'package:flame_pacman/shared/sprites.dart';
 
-class WallComponent extends SpriteComponent {
+class WallComponent extends SpriteComponent with PositionHelper {
   final WallType type;
   final Direction? direction;
+  final bool debug;
 
-  WallComponent({required this.type, this.direction, super.position})
-      : super(size: Vector2.all(Constants.spritesSize));
+  WallComponent({
+    required this.type,
+    this.debug = false,
+    this.direction,
+    super.position,
+  }) : super(size: Vector2.all(Constants.spritesSize));
   @override
   Future<void> onLoad() async {
     anchor = Anchor.center;
@@ -31,5 +37,6 @@ class WallComponent extends SpriteComponent {
       angle = pi / 2;
     }
     add(RectangleHitbox(isSolid: true));
+    debugMode = debug;
   }
 }

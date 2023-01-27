@@ -1,8 +1,10 @@
 import 'dart:math';
 
+import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame_pacman/game/components/pacman_component.dart';
+import 'package:flame_pacman/game/components/walls/wall_component.dart';
 import 'package:flame_pacman/shared/constants.dart';
 import 'package:flame_pacman/shared/enums.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,14 +18,16 @@ class PacmanGame extends FlameGame with KeyboardEvents, HasCollisionDetection {
   @override
   Future<void> onLoad() async {
     pacmanSprite = PacmanComponent(
+      velocity: 3.5,
       position:
           //Vector2(Constants.spritesOffsetN(3), Constants.spritesSize * 3),
-          Vector2(260, 160),
+          Vector2(100, 100),
     );
     await add(pacmanSprite);
-
     final gameWalls = GameWalls();
     add(gameWalls);
+    //add(WallComponent(
+    //    type: WallType.long1, position: Vector2(200, 200), debug: true));
   }
 
   @override
@@ -52,20 +56,9 @@ class PacmanGame extends FlameGame with KeyboardEvents, HasCollisionDetection {
     return KeyEventResult.ignored;
   }
 
-  moveRight() {
-    pacmanSprite.x++;
-    pacmanSprite.angle += pi;
-  }
-
-  moveLeft() {
-    pacmanSprite.x--;
-  }
-
-  moveUp() {
-    pacmanSprite.y--;
-  }
-
-  moveDown() {
-    pacmanSprite.y++;
-  }
+  // @override
+  // update(double dt) {
+  //   super.update(dt);
+  //   pacmanSprite.move(Direction.right);
+  // }
 }
