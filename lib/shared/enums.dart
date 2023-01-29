@@ -15,3 +15,5 @@ enum WallType {
   cross3,
   cross4,
 }
+
+enum EdgeCollisionType { fullEdge, cornersOnly, middleOnly, cornersAndMiddle }

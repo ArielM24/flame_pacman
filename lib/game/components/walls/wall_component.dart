@@ -2,10 +2,11 @@ import 'dart:math';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/flame.dart';
+import 'package:flame_pacman/shared/assets.dart';
 import 'package:flame_pacman/shared/constants.dart';
-import 'package:flame_pacman/shared/position_helper.dart';
+import 'package:flame_pacman/shared/trajectory/position_helper.dart';
 import 'package:flame_pacman/shared/enums.dart';
-import 'package:flame_pacman/shared/sprites.dart';
 
 class WallComponent extends SpriteComponent with PositionHelper {
   final WallType type;
@@ -22,11 +23,11 @@ class WallComponent extends SpriteComponent with PositionHelper {
   Future<void> onLoad() async {
     anchor = Anchor.center;
     Map<WallType, String> sprites = {
-      WallType.cross1: Sprites.wallCross1,
-      WallType.edge1: Sprites.wallEdge1,
-      WallType.long1: Sprites.wallLong1
+      WallType.cross1: Assets.assetsImagesWallCross1.split("/").last,
+      WallType.edge1: Assets.assetsImagesWallEdge1.split("/").last,
+      WallType.long1: Assets.assetsImagesWallLong1.split("/").last
     };
-    sprite = await Sprite.load(sprites[type] ?? Sprites.wallLong1);
+    sprite = Sprite(await Flame.images.load(sprites[type]!));
     if (direction == Direction.left) {
       angle = -pi / 2;
     } else if (direction == Direction.down) {

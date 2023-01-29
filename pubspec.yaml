@@ -69,6 +69,11 @@ flutter:
     - assets/images/wallEdge1.png
     - assets/images/wallCross1.png
 
+flutter_assets:
+  assets_path: assets/
+  output_path: lib/shared/
+  filename: assets.dart
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
@@ -94,3 +99,4 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+

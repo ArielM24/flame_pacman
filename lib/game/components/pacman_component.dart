@@ -3,16 +3,13 @@ import 'dart:math';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
-import 'package:flame_pacman/game/components/hitbox/hitboxed_sprite.dart';
 import 'package:flame_pacman/game/components/walls/wall_component.dart';
-import 'package:flame_pacman/game/components/walls/wall_double_edge.dart';
-import 'package:flame_pacman/game/components/walls/wall_list_component.dart';
-import 'package:flame_pacman/game/pacman_game.dart';
 import 'package:flame_pacman/shared/constants.dart';
-import 'package:flame_pacman/shared/position_helper.dart';
+import 'package:flame_pacman/shared/trajectory/position_helper.dart';
 import 'package:flame_pacman/shared/enums.dart';
 import 'package:flame_pacman/shared/movement_constraints.dart';
 import 'package:flame_pacman/shared/sprites.dart';
+import 'package:flame_pacman/shared/trajectory/trajectory_helper.dart';
 import 'package:flutter/material.dart';
 
 class PacmanComponent extends SpriteComponent
@@ -20,7 +17,7 @@ class PacmanComponent extends SpriteComponent
         CollisionCallbacks,
         HasGameRef<FlameGame>,
         PositionHelper,
-        EdgeCollideHelper {
+        TrajectoryHelper {
   Direction lookingAt;
   double velocity;
 
@@ -69,35 +66,56 @@ class PacmanComponent extends SpriteComponent
 
   double get spriteVelocity => size.x * velocity;
 
+  bool isInBoundsToMove(Direction direction) {
+    switch (direction) {
+      case Direction.right:
+        return (x + spriteVelocity) <= movementConstraints.right;
+      case Direction.left:
+        return (x - spriteVelocity) >= movementConstraints.left;
+      case Direction.up:
+        return (y - spriteVelocity) >= movementConstraints.top;
+      case Direction.down:
+        return (y + spriteVelocity) <= movementConstraints.bottom;
+      default:
+    }
+    return true;
+  }
+
   move(Direction direction) {
     lootAtDirection(direction);
     updateSprite();
-
-    if (direction == Direction.right) {
-      if ((x + spriteVelocity) <= movementConstraints.right) {
-        final moveToX = rightEdgeSafePosition(
-            spriteVelocity, () => WallComponent(type: WallType.cross1));
-        x = moveToX;
-      }
-    } else if (direction == Direction.left) {
-      if ((x - spriteVelocity) >= movementConstraints.left) {
-        final moveToX = leftEdgeSafePosition(
-            spriteVelocity, () => WallComponent(type: WallType.cross1));
-        x = moveToX;
-      }
-    } else if (direction == Direction.up) {
-      if ((y - spriteVelocity) >= movementConstraints.top) {
-        final moveToY = topEdgeSafePosition(
-            spriteVelocity, () => WallComponent(type: WallType.cross1));
-        y = moveToY;
-      }
-    } else if (direction == Direction.down) {
-      if ((y + spriteVelocity) <= movementConstraints.bottom) {
-        final moveToY = bottomEdgeSafePosition(
-            spriteVelocity, () => WallComponent(type: WallType.cross1));
-        y = moveToY;
-      }
+    if (!isInBoundsToMove(direction)) {
+      return;
     }
+    final moveToPos = edgeSafePosition(
+        spriteVelocity, () => WallComponent(type: WallType.cross1), direction);
+    position = moveToPos;
+
+    // if (direction == Direction.right) {
+    //   if ((x + spriteVelocity) <= movementConstraints.right) {
+    //     final moveToX = edgeSafePosition(
+    //         spriteVelocity, () => WallComponent(type: WallType.cross1));
+    //     x = moveToX;
+    //   }
+    // } else if (direction == Direction.left) {
+    //   if ((x - spriteVelocity) >= movementConstraints.left) {
+    //     final moveToX = leftEdgeSafePosition(
+    //         spriteVelocity, () => WallComponent(type: WallType.cross1));
+    //     x = moveToX;
+    //   }
+    // } else if (direction == Direction.up) {
+    //   if ((y - spriteVelocity) >= movementConstraints.top) {
+    //     final moveToY = topEdgeSafePosition(
+    //         spriteVelocity, () => WallComponent(type: WallType.cross1));
+    //     y = moveToY;
+    //   }
+    // } else if (direction == Direction.down) {
+    //   if ((y + spriteVelocity) <= movementConstraints.bottom) {
+    //     final moveToY = bottomEdgeSafePosition(
+    //         spriteVelocity, () => WallComponent(type: WallType.cross1));
+    //     y = moveToY;
+    //   }
+    // }
   }
 
   lootAtDirection(Direction direction) {
