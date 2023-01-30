@@ -21,7 +21,7 @@ class PacmanGame extends FlameGame with KeyboardEvents, HasCollisionDetection {
       velocity: 0.3,
       position:
           //Vector2(Constants.spritesOffsetN(3), Constants.spritesSize * 3),
-          Vector2(100, 100),
+          Vector2(555, 350),
     );
     await add(pacmanSprite);
     final gameWalls = GameWalls();
@@ -55,10 +55,4 @@ class PacmanGame extends FlameGame with KeyboardEvents, HasCollisionDetection {
     }
     return KeyEventResult.ignored;
   }
-
-  // @override
-  // update(double dt) {
-  //   super.update(dt);
-  //   pacmanSprite.move(Direction.right);
-  // }
 }

@@ -9,6 +9,8 @@ mixin TrajectoryHelper on PositionHelper, HasGameRef<FlameGame> {
   EdgeCollisionType get edgeCollisionType;
 
   double get stepCheckDistance;
+  bool classInterrupsTrajectory(component);
+
   List<Vector2> get collidablePoints {
     List<Vector2> points = [];
     if (edgeCollisionType == EdgeCollisionType.fullEdge) {
@@ -130,16 +132,15 @@ mixin TrajectoryHelper on PositionHelper, HasGameRef<FlameGame> {
     for (final point in points) {
       final components = game.componentsAtPoint(point);
       for (final component in components) {
-        if (component is PositionHelper) {
-          if (component.runtimeType == classChecker().runtimeType) {
-            final aux = _getEdgePos(direction, component);
-            if (useX) {
-              safePosition.x = aux;
-            } else {
-              safePosition.y = aux;
-            }
-            return safePosition;
+        if (classInterrupsTrajectory(component) &&
+            component is PositionHelper) {
+          final aux = _getEdgePos(direction, component);
+          if (useX) {
+            safePosition.x = aux;
+          } else {
+            safePosition.y = aux;
           }
+          return safePosition;
         }
       }
     }

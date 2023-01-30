@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flame/components.dart';
+import 'package:flame_pacman/game/components/walls/game_borders.dart';
 import 'package:flame_pacman/shared/constants.dart';
 
 import 'wall_cross.dart';
@@ -67,5 +68,6 @@ class GameWalls extends PositionComponent {
         position:
             Vector2(Constants.spritesOffsetN(18), Constants.spritesSize * 18));
     add(wallCross5);
+    add(GameBorders());
   }
 }

@@ -1,7 +1,4 @@
 import 'package:flame/components.dart';
-import 'package:flame/game.dart';
-import 'package:flame_pacman/shared/enums.dart';
-import 'package:flutter/foundation.dart';
 
 mixin PositionHelper on PositionComponent {
   double get halfWidth => size.x / 2;
@@ -12,22 +9,6 @@ mixin PositionHelper on PositionComponent {
     final aux = absoluteTopLeftPosition.clone();
     aux.rotate(-absoluteAngle, center: absoluteCenter);
     return aux;
-  }
-
-  double get relativeRightEdge {
-    return topLeftPosition.x + size.x;
-  }
-
-  double get relativeLeftEdge {
-    return topLeftPosition.x;
-  }
-
-  double get relativeTopEdge {
-    return topLeftPosition.y;
-  }
-
-  double get relativeBottomEdge {
-    return topLeftPosition.y + size.y;
   }
 
   double get rightEdge {

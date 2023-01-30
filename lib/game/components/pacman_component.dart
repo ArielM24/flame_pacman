@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
+import 'package:flame_pacman/game/components/walls/game_borders.dart';
 import 'package:flame_pacman/game/components/walls/wall_component.dart';
 import 'package:flame_pacman/shared/constants.dart';
 import 'package:flame_pacman/shared/trajectory/position_helper.dart';
@@ -35,11 +36,7 @@ class PacmanComponent extends SpriteComponent
       {this.lookingAt = Direction.right,
       super.position,
       this.velocity = 1.5,
-      this.movementConstraints = const MovementConstraints(
-          bottom: 2500,
-          right: 2500,
-          top: Constants.spritesSize,
-          left: Constants.spritesSize)})
+      this.movementConstraints = const MovementConstraints()})
       : super(
           size: Vector2.all(Constants.spritesSize),
           anchor: Anchor.center,
@@ -170,4 +167,14 @@ class PacmanComponent extends SpriteComponent
 
   @override
   double get stepCheckDistance => Constants.spritesSize;
+
+  @override
+  bool classInterrupsTrajectory(component) {
+    if (component is PositionComponent) {
+      bool isBorder = component is GameBorders;
+      bool isWall = component is WallComponent;
+      return isWall || isBorder;
+    }
+    return false;
+  }
 }
